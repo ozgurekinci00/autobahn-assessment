@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { GoogleMapsModule } from '@angular/google-maps';
+import { GoogleMapsModule,  GoogleMap, MapMarker, MapMarkerClusterer } from '@angular/google-maps';
 import { OverviewComponent } from './overview/overview.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, GoogleMapsModule, OverviewComponent],
+  imports: [CommonModule, RouterOutlet, GoogleMapsModule, OverviewComponent ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

@@ -1,0 +1,67 @@
+<google-map height="50%" width="100%" [center]="center" [zoom]="zoom">
+</google-map>
+
+<div class="dropdown-container">
+  <mat-form-field>
+    <mat-label>Choose a highway</mat-label>
+    <mat-select
+      [(ngModel)]="selectedRoad"
+      (ngModelChange)="onRoadSelectionChange()"
+    >
+      <mat-option *ngFor="let road of roads; let i = index" [value]="road">{{
+        road
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+@if ((asyncTabs | async) === null) { Loading tabs... }
+<!-- (selectedTabChange)="onTabChange($event)" will be added -->
+<mat-tab-group>
+  @for (tab of asyncTabs | async; track tab) {
+  <mat-tab>
+    <ng-template mat-tab-label>{{ tab.label }}</ng-template>
+    <table mat-table [dataSource]="tab.content" class="mat-elevation-z8">
+      <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Title</th>
+        <td mat-cell *matCellDef="let element">{{ element.title }}</td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="subtitle">
+        <th mat-header-cell *matHeaderCellDef>Subtitle</th>
+        <td mat-cell *matCellDef="let element">{{ element.subtitle }}</td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="latitude">
+        <th mat-header-cell *matHeaderCellDef>Latitude</th>
+        <td mat-cell *matCellDef="let element">{{ element.coordinate.lat }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="longitude">
+        <th mat-header-cell *matHeaderCellDef>Longitude</th>
+        <td mat-cell *matCellDef="let element">{{ element.coordinate.long }}</td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="isBlocked">
+        <th mat-header-cell *matHeaderCellDef>isBlocked</th>
+        <td mat-cell *matCellDef="let element">{{ element.isBlocked }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        (click)="onRowSelected(row)"
+        [ngClass]="{ 'selected-row': row === selectedRow }"
+      ></tr>
+    </table>
+  </mat-tab>
+  }
+</mat-tab-group>
