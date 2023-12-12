@@ -1,3 +1,5 @@
+import { MatTableDataSource } from "@angular/material/table";
+
 export interface CommonFields {
   coordinate: {
     lat: string;
@@ -67,4 +69,31 @@ export interface Coordinate {
 export interface ExampleTab {
   label: string;
   content: ExtractedInfo[];
+}
+
+export interface State {
+  roads: never[];
+  selectedRoad: string;
+  tabsData: {
+    constructionSites: { roadworks: never[] };
+    trafficReports: { warning: never[] };
+    restAreas: { parking_lorry: never[] };
+    suspensions: { closure: never[] };
+    chargingStations: { electric_charging_station: never[] };
+  };
+  selectedTabIndex: number;
+  selectedRow: null;
+  markerPositions: never[];
+  center: { lat: number; lng: number },
+  zoom: number,
+  parsedData: {
+    roadworksData: never[],
+    restAreasData: never[],
+    trafficReportsData: never[],
+    suspensionsData: never[],
+    chargingStationsData: never[],
+  },
+  asyncTabs: any
+  tabDataSources: MatTableDataSource<ExtractedInfo>[],
+  infoWindowContent: string
 }

@@ -7,14 +7,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
-import { Observable, Observer } from 'rxjs';
+import { Observable, Observer, Subscription } from 'rxjs';
 import { MatTabsModule } from '@angular/material/tabs';
 import { AsyncPipe } from '@angular/common';
 import {
   AllRoadInfos,
   CommonFields,
   ExtractedInfo,
-  AllRoadExtractedInfos,
   ExampleTab,
 } from '../interfaces/CommonInfoFields';
 import { ParserService } from '../parser.service';
@@ -22,6 +21,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-overview',
@@ -43,16 +43,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
   styleUrl: './overview.component.scss',
 })
 export class OverviewComponent implements OnInit {
-  panelOpenState = false;
-  roads = [];
-  selectedRoad: string = 'A1';
-  center: google.maps.LatLngLiteral = { lat: 52.1657, lng: 8.4515 };
-  zoom = 6;
-  markerPositions: google.maps.LatLngLiteral[] = [];
-  markerClustererImagePath =
-    'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m';
-  asyncTabs: Observable<ExampleTab[]>;
-  currentContent = [];
+  state: any;
+  subscription: Subscription;
   displayedColumns: string[] = [
     'title',
     'subtitle',
@@ -60,43 +52,39 @@ export class OverviewComponent implements OnInit {
     'longitude',
     'isBlocked',
   ];
-  selectedRow: any = null;
-  selectedTabIndex: number = 0;
-  parsedData: AllRoadExtractedInfos = {
-    roadworksData: [],
-    restAreasData: [],
-    trafficReportsData: [],
-    suspensionsData: [],
-    chargingStationsData: [],
-  };
-  infoWindowContent: string = '';
 
   // Add ViewChild for the paginator
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MapInfoWindow) infoWindow!: MapInfoWindow;
 
-  // Create a new MatTableDataSource array for each tab
-  tabDataSources: MatTableDataSource<ExtractedInfo>[] = [];
-
   constructor(
     private apiService: ApiService,
-    private parserService: ParserService
+    private parserService: ParserService,
+    public dataService: DataService
   ) {
-    this.asyncTabs = new Observable((observer: Observer<ExampleTab[]>) => {
-      observer.next([
-        { label: 'Construction Sites', content: [] },
-        { label: 'Rest Areas', content: [] },
-        { label: 'Traffic Reports', content: [] },
-        { label: 'Suspensions', content: [] },
-        { label: 'Charging Stations', content: [] },
-      ]);
-    });
+    this.subscription = this.dataService.state$
+      .subscribe(state => {
+        this.state = state;
+      });
+    this.dataService.updateState({
+      asyncTabs: new Observable((observer: Observer<ExampleTab[]>) => {
+        observer.next([
+          { label: 'Construction Sites', content: [] },
+          { label: 'Rest Areas', content: [] },
+          { label: 'Traffic Reports', content: [] },
+          { label: 'Suspensions', content: [] },
+          { label: 'Charging Stations', content: [] },
+        ]);
+      })
+    })
   }
 
   ngOnInit() {
     this.apiService.getAutobahns().subscribe({
       next: (data) => {
-        this.roads = data.roads;
+        this.dataService.updateState({
+          roads: data.roads
+        })
       },
       error: (error) => {
         console.error('Error fetching Autobahn data:', error);
@@ -106,48 +94,58 @@ export class OverviewComponent implements OnInit {
   }
 
   onRoadSelectionChange() {
-    this.selectedRow = null; // Reset selected row when the highway changes
-    this.selectedTabIndex = 0;
+    this.dataService.updateState({
+      selectedRow: null, // Reset selected row when the highway changes
+      selectedTabIndex: 0
+    });
     // Make API call with the new value of selectedRoad
-    this.apiService.getTableData(this.selectedRoad).subscribe({
+    this.apiService.getTableData(this.state.selectedRoad).subscribe({
       next: (data: AllRoadInfos) => {
         // Update map values and content values of tabs
         if (data.roadworksData.roadworks.length !== 0) {
-          this.center = {
-            lat: Number(data.roadworksData.roadworks[0].coordinate.lat),
-            lng: Number(data.roadworksData.roadworks[0].coordinate.long),
-          };
+          this.dataService.updateState({
+            center: {
+              lat: Number(data.roadworksData.roadworks[0].coordinate.lat),
+              lng: Number(data.roadworksData.roadworks[0].coordinate.long),
+            }
+          })
         }
-        this.parsedData = this.parserService.parseInfo(data);
+        this.dataService.updateState({
+          parsedData: this.parserService.parseInfo(data)
+        });
         this.setMarkersForTab();
         // Update tab content based on the API response
-        this.asyncTabs = new Observable((observer: Observer<ExampleTab[]>) => {
-          observer.next([
-            {
-              label: 'Construction Sites',
-              content: this.parsedData.roadworksData,
-            },
-            { label: 'Rest Areas', content: this.parsedData.restAreasData },
-            {
-              label: 'Traffic Reports',
-              content: this.parsedData.trafficReportsData,
-            },
-            { label: 'Suspensions', content: this.parsedData.suspensionsData },
-            {
-              label: 'Charging Stations',
-              content: this.parsedData.chargingStationsData,
-            },
-          ]);
-        });
+        this.dataService.updateState({
+          asyncTabs: new Observable((observer: Observer<ExampleTab[]>) => {
+            observer.next([
+              {
+                label: 'Construction Sites',
+                content: this.state.parsedData.roadworksData,
+              },
+              { label: 'Rest Areas', content: this.state.parsedData.restAreasData },
+              {
+                label: 'Traffic Reports',
+                content: this.state.parsedData.trafficReportsData,
+              },
+              { label: 'Suspensions', content: this.state.parsedData.suspensionsData },
+              {
+                label: 'Charging Stations',
+                content: this.state.parsedData.chargingStationsData,
+              },
+            ]);
+          })
+        })
 
         // Initialize or update the MatTableDataSource for each tab
-        this.asyncTabs.subscribe((tabs) => {
-          this.tabDataSources = tabs.map((tab) => {
-            const dataSource = new MatTableDataSource(tab.content);
-            dataSource.paginator =
-              this.selectedTabIndex === 0 ? this.paginator : null; // Set paginator for each dataSource
-            return dataSource;
-          });
+        this.state.asyncTabs.subscribe((tabs: any) => {
+          this.dataService.updateState({
+            tabDataSources: tabs.map((tab: any) => {
+              const dataSource = new MatTableDataSource(tab.content);
+              dataSource.paginator =
+                this.state.selectedTabIndex === 0 ? this.paginator : null; // Set paginator for each dataSource
+              return dataSource;
+            })
+          })
         });
       },
       error: (error: any) => {
@@ -157,31 +155,37 @@ export class OverviewComponent implements OnInit {
   }
 
   onRowSelected(row: CommonFields) {
-    if (this.selectedRow !== row) {
-      this.selectedRow = row;
-      console.log('SELECTED ROW', this.selectedRow);
+    if (this.state.selectedRow !== row) {
+      this.dataService.updateState({
+        selectedRow: row
+      });
+      console.log('SELECTED ROW', this.state.selectedRow);
       // Update the center based on the selected row
       this.updateCenterFromSelectedRow();
     } else {
-      this.selectedRow = null;
-      this.center = { lat: 51.1657, lng: 10.4515 };
-      this.zoom = 6;
+      this.dataService.updateState({
+        selectedRow: null,
+        center: { lat: 51.1657, lng: 10.4515 },
+        zoom: 6
+      });
     }
   }
 
   updateCenterFromSelectedRow() {
-    if (this.selectedRow) {
-      const long = parseFloat(this.selectedRow.coordinate.long);
-      const lat = parseFloat(this.selectedRow.coordinate.lat);
-      this.center = { lat: lat, lng: long };
-      this.zoom = 16;
+    if (this.state.selectedRow) {
+      const long = parseFloat(this.state.selectedRow.coordinate.long);
+      const lat = parseFloat(this.state.selectedRow.coordinate.lat);
+      this.dataService.updateState({
+        center: { lat: lat, lng: long },
+        zoom: 16
+      })
     }
   }
 
   setMarkersForTab() {
     let markersArray: google.maps.LatLngLiteral[] = [];
     let tab: string = '';
-    switch (this.selectedTabIndex) {
+    switch (this.state.selectedTabIndex) {
       case 0:
         tab = 'roadworksData';
         break;
@@ -199,31 +203,42 @@ export class OverviewComponent implements OnInit {
         break;
     }
 
-    this.parsedData[tab].forEach((item: ExtractedInfo) => {
+    this.state.parsedData[tab].forEach((item: ExtractedInfo) => {
       markersArray.push({
         lat: parseFloat(item.coordinate.lat),
         lng: parseFloat(item.coordinate.long),
       });
     });
 
-    this.markerPositions = markersArray;
+    this.dataService.updateState({
+      markerPositions: markersArray
+    });
   }
 
   onTabChange(event: any) {
-    this.selectedRow = null;
-    this.selectedTabIndex = event.index;
-    this.center = { lat: 52.1657, lng: 8.4515 };
-    this.zoom = 6;
+    this.dataService.updateState({
+      selectedRow: null,
+      selectedTabIndex: event.index,
+      center: { lat: 52.1657, lng: 8.4515 },
+      zoom: 6
+    });
+
     this.setMarkersForTab();
 
     if (this.paginator) {
-      this.tabDataSources[this.selectedTabIndex].paginator = this.paginator;
+      const updatedTabDataSources = this.state.tabDataSources;
+      updatedTabDataSources[this.state.selectedTabIndex].paginator = this.paginator;
+      this.dataService.updateState({
+        tabDataSources: updatedTabDataSources
+      })
     }
   }
 
   openInfoWindow(marker: MapMarker) {
     console.log('MARKER', marker);
     this.infoWindow.open(marker);
-    this.infoWindowContent = this.selectedRow.description.join(' ');
+    this.dataService.updateState({
+      infoWindowContent: this.state.selectedRow.description.join(' ')
+    })
   }
 }
