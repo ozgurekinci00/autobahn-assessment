@@ -1,0 +1,17 @@
+<div *ngIf="dataService.state$ | async as state">
+  <div class="dropdown-container">
+    <mat-form-field>
+      <mat-label>Choose a highway</mat-label>
+      <mat-select
+        [(ngModel)]="state.selectedRoad"
+        (ngModelChange)="onRoadSelectionChange()"
+      >
+        <mat-option
+          *ngFor="let road of state.roads; let i = index"
+          [value]="road"
+          >{{ road }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>

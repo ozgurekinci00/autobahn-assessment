@@ -1,0 +1,18 @@
+<google-map
+  *ngIf="dataService.state$ | async as state"
+  height="45%"
+  width="100%"
+  [center]="state.center"
+  [zoom]="state.zoom"
+>
+  <map-marker-clusterer [imagePath]="state.markerClustererImagePath">
+    @for (position of state.markerPositions; track position) {
+    <map-marker
+      #marker="mapMarker"
+      [position]="position"
+      (mapClick)="openInfoWindow(marker)"
+    />
+    }
+    <map-info-window>{{ state.infoWindowContent }}</map-info-window>
+  </map-marker-clusterer>
+</google-map>

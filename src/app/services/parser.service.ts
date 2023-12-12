@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AllRoadInfos, CommonFields } from './interfaces/CommonInfoFields';
+import { AllRoadInfos, CommonFields } from '../interfaces/CommonInfoFields';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +26,7 @@ export class ParserService {
           subtitle,
           coordinate,
           isBlocked,
-          description
+          description,
         }))(item)
       );
       parsedData[key as keyof typeof parsedData] = value;

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',

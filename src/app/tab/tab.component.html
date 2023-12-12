@@ -1,0 +1,17 @@
+<div *ngIf="dataService.state$ | async as state">
+  @if ((state.asyncTabs | async) === null) { Loading tabs... }
+
+  <mat-tab-group (selectedTabChange)="onTabChange($event)">
+    <ng-container *ngFor="let tab of state.asyncTabs | async; let i = index">
+      <mat-tab>
+        <ng-template mat-tab-label>{{ tab.label }}</ng-template>
+        <app-table [currentTabIndex]="i"></app-table>
+      </mat-tab>
+    </ng-container>
+  </mat-tab-group>
+  <mat-paginator
+    [pageSize]="5"
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+  ></mat-paginator>
+</div>

@@ -1,0 +1,17 @@
+.dropdown-container {
+  margin: auto;
+  margin-top: 10px;
+  width: 30%;
+  align-items: center;
+}
+
+@media (max-width: 600px) {
+  .dropdown-container {
+    width: 80%;
+  }
+}
+
+mat-form-field {
+  margin: auto;
+  width: 100%;
+}
