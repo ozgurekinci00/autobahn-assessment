@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { CommonFields, Roads } from '../interfaces/CommonInfoFields';
 
 @Injectable({
   providedIn: 'root',
@@ -25,32 +26,32 @@ export class ApiService {
     });
   }
 
-  getAutobahns(): Observable<any> {
+  getAutobahns(): Observable<Roads> {
     return this.fetchData(this.apiUrl);
   }
 
-  private getDataForService(roadId: string, service: string): Observable<any> {
+  private getDataForService(roadId: string, service: string): Observable<CommonFields> {
     const url = `${this.apiUrl}${roadId}/services/${service}`;
     return this.fetchData(url);
   }
 
-  getRoadworks(roadId: string): Observable<any> {
+  getRoadworks(roadId: string): Observable<CommonFields> {
     return this.getDataForService(roadId, 'roadworks');
   }
 
-  getRestAreas(roadId: string): Observable<any> {
+  getRestAreas(roadId: string): Observable<CommonFields> {
     return this.getDataForService(roadId, 'parking_lorry');
   }
 
-  getTrafficReports(roadId: string): Observable<any> {
+  getTrafficReports(roadId: string): Observable<CommonFields> {
     return this.getDataForService(roadId, 'warning');
   }
 
-  getSuspensions(roadId: string): Observable<any> {
+  getSuspensions(roadId: string): Observable<CommonFields> {
     return this.getDataForService(roadId, 'closure');
   }
 
-  getChargingStations(roadId: string): Observable<any> {
+  getChargingStations(roadId: string): Observable<CommonFields> {
     return this.getDataForService(roadId, 'electric_charging_station');
   }
 

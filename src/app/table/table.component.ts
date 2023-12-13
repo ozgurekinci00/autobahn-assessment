@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { DataService } from '../services/data.service';
-import { CommonFields } from '../interfaces/CommonInfoFields';
+import { CommonFields, State } from '../interfaces/CommonInfoFields';
 import { MatTableModule } from '@angular/material/table';
 
 @Component({
@@ -12,8 +12,8 @@ import { MatTableModule } from '@angular/material/table';
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
 })
-export class TableComponent {
-  state: any;
+export class TableComponent implements OnDestroy {
+  state!: State;
   subscription: Subscription;
   displayedColumns: string[] = [
     'title',
@@ -55,5 +55,9 @@ export class TableComponent {
         zoom: 16,
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

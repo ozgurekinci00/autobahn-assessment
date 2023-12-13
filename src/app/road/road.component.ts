@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable, Observer, Subscription } from 'rxjs';
 import { DataService } from '../services/data.service';
-import { AllRoadInfos, ExampleTab } from '../interfaces/CommonInfoFields';
+import { AllRoadInfos, ExampleTab, State } from '../interfaces/CommonInfoFields';
 import { ApiService } from '../services/api.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ParserService } from '../services/parser.service';
@@ -25,8 +25,8 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './road.component.html',
   styleUrl: './road.component.scss',
 })
-export class RoadComponent implements OnInit {
-  state: any;
+export class RoadComponent implements OnInit, OnDestroy {
+  state!: State;
   subscription: Subscription;
 
   constructor(
@@ -114,9 +114,9 @@ export class RoadComponent implements OnInit {
         });
 
         // Initialize or update the MatTableDataSource for each tab
-        this.state.asyncTabs.subscribe((tabs: any) => {
+        this.state.asyncTabs.subscribe((tabs: ExampleTab[]) => {
           this.dataService.updateState({
-            tabDataSources: tabs.map((tab: any) => {
+            tabDataSources: tabs.map((tab: ExampleTab) => {
               const dataSource = new MatTableDataSource(tab.content);
               dataSource.paginator =
                 this.state.selectedTabIndex === 0 ? this.state.paginator : null; // Set paginator for each dataSource
@@ -130,4 +130,8 @@ export class RoadComponent implements OnInit {
       },
     });
   }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+}
 }

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { DataService } from '../services/data.service';
@@ -6,6 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { TableComponent } from '../table/table.component';
 import { MatTabsModule } from '@angular/material/tabs';
+import { State } from '../interfaces/CommonInfoFields';
 
 @Component({
   selector: 'app-tab',
@@ -14,8 +15,8 @@ import { MatTabsModule } from '@angular/material/tabs';
   templateUrl: './tab.component.html',
   styleUrl: './tab.component.scss',
 })
-export class TabComponent {
-  state: any;
+export class TabComponent implements OnDestroy {
+  state!: State;
   subscription: Subscription;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -44,5 +45,9 @@ export class TabComponent {
         tabDataSources: updatedTabDataSources,
       });
     }
+  }
+
+  ngOnDestroy(): void {
+      this.subscription.unsubscribe();
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ExtractedInfo } from '../interfaces/CommonInfoFields';
+import { ExtractedInfo, State } from '../interfaces/CommonInfoFields';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Injectable({
@@ -52,7 +52,7 @@ export class DataService {
   setMarkersForTab() {
     let markersArray: google.maps.LatLngLiteral[] = [];
     let tab: string = '';
-    const currentState: any = this.state.getValue();
+    const currentState: State = this.state.getValue();
     switch (currentState.selectedTabIndex) {
       case 0:
         tab = 'roadworksData';

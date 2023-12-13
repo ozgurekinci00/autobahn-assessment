@@ -21,6 +21,19 @@ export interface CommonFields {
   startTimestamp?: string;
 }
 
+export interface WholeRawRoadsData {
+  [key: string]: CommonFields[];
+  roadworksData: CommonFields[];
+  restAreasData: CommonFields[];
+  trafficReportsData: CommonFields[];
+  suspensionsData: CommonFields[];
+  chargingStationsData: CommonFields[];
+}
+
+export interface Roads {
+  roads: string[]
+}
+
 export interface ParkingFeatureIcons {
   description: string;
   icon: string;
@@ -32,6 +45,7 @@ export interface ExtractedInfo {
   subtitle: string;
   coordinate: Coordinate;
   isBlocked: string;
+  description?: string[]
 }
 
 export interface AllRoadExtractedInfos {
@@ -72,28 +86,30 @@ export interface ExampleTab {
 }
 
 export interface State {
-  roads: never[];
+  roads: string[];
   selectedRoad: string;
   tabsData: {
-    constructionSites: { roadworks: never[] };
-    trafficReports: { warning: never[] };
-    restAreas: { parking_lorry: never[] };
-    suspensions: { closure: never[] };
-    chargingStations: { electric_charging_station: never[] };
+    constructionSites: { roadworks: CommonFields[] };
+    trafficReports: { warning: CommonFields[] };
+    restAreas: { parking_lorry: CommonFields[] };
+    suspensions: { closure: CommonFields[] };
+    chargingStations: { electric_charging_station: CommonFields[] };
   };
   selectedTabIndex: number;
-  selectedRow: null;
+  selectedRow: ExtractedInfo | any;
   markerPositions: never[];
   center: { lat: number; lng: number },
   zoom: number,
   parsedData: {
-    roadworksData: never[],
-    restAreasData: never[],
-    trafficReportsData: never[],
-    suspensionsData: never[],
-    chargingStationsData: never[],
+    [key: string]: CommonFields[];
+    roadworksData: CommonFields[],
+    restAreasData: CommonFields[],
+    trafficReportsData: CommonFields[],
+    suspensionsData: CommonFields[],
+    chargingStationsData: CommonFields[],
   },
   asyncTabs: any
   tabDataSources: MatTableDataSource<ExtractedInfo>[],
-  infoWindowContent: string
+  infoWindowContent: string,
+  paginator?: any
 }

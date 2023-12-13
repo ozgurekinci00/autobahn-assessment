@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AllRoadInfos, CommonFields } from '../interfaces/CommonInfoFields';
+import { AllRoadInfos, CommonFields, ExtractedInfo } from '../interfaces/CommonInfoFields';
 
 @Injectable({
   providedIn: 'root',
@@ -15,8 +15,17 @@ export class ParserService {
 
   constructor() {}
 
-  parseInfo(data: AllRoadInfos): any {
-    let parsedData: any = {};
+  parseInfo(data: AllRoadInfos): ExtractedInfo {
+    let parsedData: ExtractedInfo = {
+      title: '',
+      subtitle: '',
+      coordinate: {
+        lat: '',
+        long: ''
+      },
+      isBlocked: '',
+      description: []
+    };
 
     for (let [key, value] of Object.entries(data)) {
       const tmp = this.propEnum[key as keyof typeof this.propEnum];
