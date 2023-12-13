@@ -1,11 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable, Observer, Subscription } from 'rxjs';
-import { DataService } from '../services/data.service';
-import { AllRoadInfos, ExampleTab, State } from '../interfaces/CommonInfoFields';
-import { ApiService } from '../services/api.service';
+import { DataService } from '../../services/data.service';
+import {
+  AllRoadInfos,
+  ExampleTab,
+  State,
+} from '../../interfaces/CommonInfoFields';
+import { ApiService } from '../../services/api.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { ParserService } from '../services/parser.service';
+import { ParserService } from '../../services/parser.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
@@ -98,16 +102,16 @@ export class RoadComponent implements OnInit, OnDestroy {
                 content: this.state.parsedData.restAreasData,
               },
               {
-                label: 'Traffic Reports',
-                content: this.state.parsedData.trafficReportsData,
+                label: 'Charging Stations',
+                content: this.state.parsedData.chargingStationsData,
               },
               {
                 label: 'Suspensions',
                 content: this.state.parsedData.suspensionsData,
               },
               {
-                label: 'Charging Stations',
-                content: this.state.parsedData.chargingStationsData,
+                label: 'Traffic Reports',
+                content: this.state.parsedData.trafficReportsData,
               },
             ]);
           }),
@@ -133,5 +137,5 @@ export class RoadComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-}
+  }
 }

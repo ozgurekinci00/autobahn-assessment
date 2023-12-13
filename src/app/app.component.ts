@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MapComponent } from './map/map.component';
-import { RoadComponent } from './road/road.component';
-import { TabComponent } from './tab/tab.component';
+import { MapComponent } from './components/map/map.component';
+import { RoadComponent } from './components/road/road.component';
+import { TabComponent } from './components/tab/tab.component';
 @Component({
   selector: 'app-root',
   standalone: true,

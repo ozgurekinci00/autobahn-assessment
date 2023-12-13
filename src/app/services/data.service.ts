@@ -61,13 +61,13 @@ export class DataService {
         tab = 'restAreasData';
         break;
       case 2:
-        tab = 'trafficReportsData';
+        tab = 'chargingStationsData';
         break;
       case 3:
         tab = 'suspensionsData';
         break;
       case 4:
-        tab = 'chargingStationsData';
+        tab = 'trafficReportsData';
         break;
     }
 

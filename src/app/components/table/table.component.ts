@@ -1,8 +1,8 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { DataService } from '../services/data.service';
-import { CommonFields, State } from '../interfaces/CommonInfoFields';
+import { DataService } from '../../services/data.service';
+import { CommonFields, State } from '../../interfaces/CommonInfoFields';
 import { MatTableModule } from '@angular/material/table';
 
 @Component({

@@ -1,12 +1,12 @@
 import { Component, ViewChild, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { DataService } from '../services/data.service';
+import { DataService } from '../../services/data.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { TableComponent } from '../table/table.component';
 import { MatTabsModule } from '@angular/material/tabs';
-import { State } from '../interfaces/CommonInfoFields';
+import { State } from '../../interfaces/CommonInfoFields';
 
 @Component({
   selector: 'app-tab',

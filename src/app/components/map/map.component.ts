@@ -1,10 +1,10 @@
 import { Component, ViewChild, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { DataService } from '../services/data.service';
+import { DataService } from '../../services/data.service';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
-import { State } from '../interfaces/CommonInfoFields';
+import { State } from '../../interfaces/CommonInfoFields';
 
 @Component({
   selector: 'app-map',
@@ -33,6 +33,6 @@ export class MapComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscription?.unsubscribe();
   }
 }
