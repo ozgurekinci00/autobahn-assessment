@@ -1,6 +1,6 @@
 import { MatTableDataSource } from "@angular/material/table";
 
-export interface CommonFields {
+export interface RoadElement {
   coordinate: {
     lat: string;
     long: string;
@@ -21,15 +21,6 @@ export interface CommonFields {
   startTimestamp?: string;
 }
 
-export interface WholeRawRoadsData {
-  [key: string]: CommonFields[];
-  roadworksData: CommonFields[];
-  restAreasData: CommonFields[];
-  trafficReportsData: CommonFields[];
-  suspensionsData: CommonFields[];
-  chargingStationsData: CommonFields[];
-}
-
 export interface Roads {
   roads: string[]
 }
@@ -48,30 +39,21 @@ export interface ExtractedInfo {
   description?: string[]
 }
 
-export interface AllRoadExtractedInfos {
-  [key: string]: ExtractedInfo[];
-  roadworksData: ExtractedInfo[];
-  restAreasData: ExtractedInfo[];
-  trafficReportsData: ExtractedInfo[];
-  suspensionsData: ExtractedInfo[];
-  chargingStationsData: ExtractedInfo[];
-}
-
-export interface AllRoadInfos {
+export interface RawRoadData {
   roadworksData: {
-    roadworks: CommonFields[];
+    roadworks: RoadElement[];
   };
   restAreasData: {
-    parking_lorry: CommonFields[];
+    parking_lorry: RoadElement[];
   };
   trafficReportsData: {
-    warning: CommonFields[];
+    warning: RoadElement[];
   };
   suspensionsData: {
-    closure: CommonFields[];
+    closure: RoadElement[];
   };
   chargingStationsData: {
-    electric_charging_station: CommonFields[];
+    electric_charging_station: RoadElement[];
   };
 }
 
@@ -89,11 +71,11 @@ export interface State {
   roads: string[];
   selectedRoad: string;
   tabsData: {
-    constructionSites: { roadworks: CommonFields[] };
-    trafficReports: { warning: CommonFields[] };
-    restAreas: { parking_lorry: CommonFields[] };
-    suspensions: { closure: CommonFields[] };
-    chargingStations: { electric_charging_station: CommonFields[] };
+    constructionSites: { roadworks: RoadElement[] };
+    trafficReports: { warning: RoadElement[] };
+    restAreas: { parking_lorry: RoadElement[] };
+    suspensions: { closure: RoadElement[] };
+    chargingStations: { electric_charging_station: RoadElement[] };
   };
   selectedTabIndex: number;
   selectedRow: ExtractedInfo | any;
@@ -101,12 +83,12 @@ export interface State {
   center: { lat: number; lng: number },
   zoom: number,
   parsedData: {
-    [key: string]: CommonFields[];
-    roadworksData: CommonFields[],
-    restAreasData: CommonFields[],
-    trafficReportsData: CommonFields[],
-    suspensionsData: CommonFields[],
-    chargingStationsData: CommonFields[],
+    [key: string]: RoadElement[];
+    roadworksData: RoadElement[],
+    restAreasData: RoadElement[],
+    trafficReportsData: RoadElement[],
+    suspensionsData: RoadElement[],
+    chargingStationsData: RoadElement[],
   },
   asyncTabs: any
   tabDataSources: MatTableDataSource<ExtractedInfo>[],

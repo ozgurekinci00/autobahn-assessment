@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ApiService } from './api.service';
-import { Roads, CommonFields } from '../interfaces/CommonInfoFields';
+import { Roads, RoadElement } from '../interfaces/CommonInfoFields';
 
 describe('ApiService', () => {
   let service: ApiService;
@@ -43,7 +43,7 @@ describe('ApiService', () => {
   it('should fetch roadworks', () => {
     // Arrange
     const mockRoadId = 'A1'; // replace as necessary
-    const mockRoadworks: CommonFields = {
+    const mockRoadworks: RoadElement = {
       coordinate: {
         lat: '',
         long: '',
@@ -64,7 +64,7 @@ describe('ApiService', () => {
       startTimestamp: '',
     }; // fill here with mock data
     // Act
-    service.getRoadworks(mockRoadId).subscribe((data: CommonFields) => {
+    service.getRoadworks(mockRoadId).subscribe((data: RoadElement) => {
       // Assert
       expect(data).toEqual(mockRoadworks);
     });

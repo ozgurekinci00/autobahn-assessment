@@ -27,6 +27,7 @@ export class TabComponent implements OnDestroy {
     });
   }
 
+  // Update states on tab change
   onTabChange(event: any) {
     this.dataService.updateState({
       selectedRow: null,

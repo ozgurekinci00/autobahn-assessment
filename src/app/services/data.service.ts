@@ -44,7 +44,7 @@ export class DataService {
 
   constructor() {}
 
-  // updates the state
+  // Updates the state
   updateState(updatedState: any) {
     this.state.next({ ...this.state.getValue(), ...updatedState });
   }
@@ -71,6 +71,7 @@ export class DataService {
         break;
     }
 
+    // Set markers for selected tab
     currentState.parsedData[tab].forEach((item: ExtractedInfo) => {
       markersArray.push({
         lat: parseFloat(item.coordinate.lat),

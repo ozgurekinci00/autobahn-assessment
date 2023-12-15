@@ -25,6 +25,7 @@ export class MapComponent implements OnDestroy {
     });
   }
 
+  // Display detailed info for selected marker
   openInfoWindow(marker: MapMarker) {
     this.infoWindow.open(marker);
     this.dataService.updateState({

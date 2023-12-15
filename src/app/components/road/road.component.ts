@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Observable, Observer, Subscription } from 'rxjs';
 import { DataService } from '../../services/data.service';
 import {
-  AllRoadInfos,
+  RawRoadData,
   ExampleTab,
   State,
 } from '../../interfaces/CommonInfoFields';
@@ -55,6 +55,7 @@ export class RoadComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // Fetch all roads on init
     this.apiService.getAutobahns().subscribe({
       next: (data) => {
         this.dataService.updateState({
@@ -75,7 +76,7 @@ export class RoadComponent implements OnInit, OnDestroy {
     });
     // Make API call with the new value of selectedRoad
     this.apiService.getTableData(this.state.selectedRoad).subscribe({
-      next: (data: AllRoadInfos) => {
+      next: (data: RawRoadData) => {
         // Update map values and content values of tabs
         if (data.roadworksData.roadworks.length !== 0) {
           this.dataService.updateState({

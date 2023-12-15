@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { DataService } from '../../services/data.service';
-import { CommonFields, State } from '../../interfaces/CommonInfoFields';
+import { RoadElement, State } from '../../interfaces/CommonInfoFields';
 import { MatTableModule } from '@angular/material/table';
 
 @Component({
@@ -30,7 +30,8 @@ export class TableComponent implements OnDestroy {
     });
   }
 
-  onRowSelected(row: CommonFields) {
+  // Update states on row select
+  onRowSelected(row: RoadElement) {
     if (this.state.selectedRow !== row) {
       this.dataService.updateState({
         selectedRow: row,
@@ -46,6 +47,7 @@ export class TableComponent implements OnDestroy {
     }
   }
 
+  // Adjust map props for selected row
   updateCenterFromSelectedRow() {
     if (this.state.selectedRow) {
       const long = parseFloat(this.state.selectedRow.coordinate.long);
